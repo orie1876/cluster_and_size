@@ -123,22 +123,28 @@ def init():
         plt.show()
         coords_and_clusters=pd.DataFrame(zip(fit.Cluster,fit.X,fit.Y))
         
-        skele, clusters = skeletonize(directory=path,threshold=skel_threshold,gauss_sigma=skel_gauss_sigma,cluster_size=skel_cluster_size)
+        skele, clusters = skeletonize(arr=coords_and_clusters.to_numpy(),directory=path,threshold=skel_threshold,gauss_sigma=skel_gauss_sigma,cluster_size=skel_cluster_size)
         if skele.shape == (4096, 4096):
             final_counts, ecc = count(skele, clusters)
             #plot(final_counts)
             save_data(final_counts, ecc, path)
-    
-    
+        
+        
+        plt.hist(final_counts, bins = 20,range=[0,400], rwidth=0.9,color='#607c8e')
+        plt.xlabel('Length (nm)')
+        plt.ylabel('Number of Aggregates')
+        plt.title('Histogram of Lengths')
+        plt.show()
+    return final_counts
     
 # Skeletonisation script:
 
-def skeletonize(directory,threshold, gauss_sigma, cluster_size):
+def skeletonize(arr,directory,threshold, gauss_sigma, cluster_size):
     print 'Skeletonizing...'
     
    
     labels = {}
-    arr =  coords_and_clusters.to_numpy()   
+       
     labelled = np.zeros((512*8, 512*8))#, dtype='uint16')
     try:
         max_val = int(np.amax(arr[:,0]+1))
@@ -188,6 +194,7 @@ def count(skele, clusters):
     print 'Counting...'
     nm_lengths = []
     ecc = []
+
     max_val = np.amax(skele)
     
     props = skimage.measure.regionprops(clusters)
@@ -247,3 +254,4 @@ def save_data(final_counts, ecc, d):
 
 if __name__ == '__main__':
     init()
+    lengths=init()

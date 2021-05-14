@@ -11,7 +11,7 @@ import scipy.misc
 import skimage.measure
 import skimage.morphology
 import copy
-from scipy.misc import imsave
+
 
 
 # Thresholds that need changing are here
@@ -24,16 +24,18 @@ skel_gauss_sigma=2
 skel_cluster_size=5
 PIXEL_SIZE=103.0
 
-Filename='FitResults.txt'   # This is the name of the SR file containing the localisations.
+Filename='FitResults_R1W1.txt'   # This is the name of the SR file containing the localisations.
 
 # Paths to analyse below:
 
-pathList.append(r"/Users/Mathew/Dropbox (Cambridge University)/Ed Code/DBSCAN_and_sizing/Test/")
+pathList.append(r"/Users/Mathew/Dropbox (Cambridge University)/OneDrive - University of Edinburgh/210329_RRM_timecourse_FitResults_Tht/72_hrs/3/1/")
+pathList.append(r"/Users/Mathew/Dropbox (Cambridge University)/OneDrive - University of Edinburgh/210329_RRM_timecourse_FitResults_Tht/72_hrs/3/2/")
+pathList.append(r"/Users/Mathew/Dropbox (Cambridge University)/OneDrive - University of Edinburgh/210329_RRM_timecourse_FitResults_Tht/72_hrs/3/3/")
 
 
 def init(path):
     
-    print 'RUNNING'
+    
     os.chdir(path)
     fit = pd.read_table(Filename)
     fitcopy=pd.read_table(Filename)
@@ -144,7 +146,7 @@ def init(path):
 # Skeletonisation script:
 
 def skeletonize(arr,directory,threshold, gauss_sigma, cluster_size):
-    print 'Skeletonizing...'
+    
     
     xcoord=[]
     ycoord=[]
@@ -153,9 +155,9 @@ def skeletonize(arr,directory,threshold, gauss_sigma, cluster_size):
     labelled = np.zeros((512*8, 512*8))#, dtype='uint16')
     try:
         max_val = int(np.amax(arr[:,0]+1))
-        print max_val
+       
     except IndexError:
-        print 'File contains no clusters!\n'
+   
         return np.zeros((10, 10)), np.zeros((10, 10))
     
     for label in xrange(1, max_val):
@@ -203,7 +205,7 @@ def skeletonize(arr,directory,threshold, gauss_sigma, cluster_size):
 
 
 def count(skele, clusters):
-    print 'Counting...'
+  
     nm_lengths = []
     ecc = []
 
@@ -245,7 +247,7 @@ def count(skele, clusters):
 
 
 def save_data(final_counts, ecc, meanx, meany, d):
-    print 'Saving...\n\n', 
+
     if not os.path.exists(d):
         os.makedirs(d)  
     fi = os.path.join(d, 'lengths_and_eccentricity_coords.txt')
